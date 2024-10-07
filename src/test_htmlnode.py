@@ -10,6 +10,12 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(node.value, None)
         self.assertEqual(node.children, None)
         self.assertEqual(node.props, None)
+        
+        node2 = HTMLNode("h1", "The first blog post", None, {"class":"title"})
+        self.assertEqual(node2.tag, "h1")
+        self.assertEqual(node2.value, "The first blog post")
+        self.assertEqual(node2.children, None)
+        self.assertEqual(node2.props, {'class':'title'})
     
     def test_not_implemented_error(self):
         node = HTMLNode('a', 'home', None, {"href":"/"})
@@ -17,12 +23,11 @@ class TestTextNode(unittest.TestCase):
         
     def test_repr(self):
         node = HTMLNode('a', 'home', None, {"href":"/"})
-        assert repr(node) == "HTMLNode('a', 'home', None, {'href': '/'})"
+        assert repr(node) == "HTMLNode(a, home, children: None, {'href': '/'})"
     
     def test_props_to_html(self):
         node = HTMLNode('a', 'home', None, {"href":"/"})
-        expected = ' href="/"'
-        self.assertEqual(node.props_to_html(), expected)
+        self.assertEqual(node.props_to_html(), ' href="/"')
         
 
 if __name__ == "__main__":
