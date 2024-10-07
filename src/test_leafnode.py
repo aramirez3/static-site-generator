@@ -10,6 +10,9 @@ class TestLeafNode(unittest.TestCase):
         self.assertEqual(node.children, None)
         self.assertEqual(node.props, {'class':'p-4 my-8'})
         
+        node2 = LeafNode.__new__('p', None, {"class":"red"})
+        self.assertRaises(ValueError, node2.__init__())
+        
     def test_repr(self):
         node = LeafNode('p', 'Best paragraph ever!', {"class":"p-4 my-8"})
         self.assertEqual(repr(node), "LeafNode(p, Best paragraph ever!, {'class': 'p-4 my-8'})")
