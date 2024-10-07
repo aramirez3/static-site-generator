@@ -23,7 +23,7 @@ class TestTextNode(unittest.TestCase):
         
     def test_repr(self):
         node = HTMLNode('a', 'home', None, {"href":"/"})
-        assert repr(node) == "HTMLNode(a, home, children: None, {'href': '/'})"
+        self.assertEqual(repr(node), "HTMLNode(a, home, children: None, {'href': '/'})")
     
     def test_props_to_html(self):
         node = HTMLNode('a', 'home', None, {"href":"/"})

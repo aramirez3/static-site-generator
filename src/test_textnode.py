@@ -11,7 +11,7 @@ class TestTextNode(unittest.TestCase):
         
     def test_repr(self):
         node = TextNode("This is a text node", "bold", "http://0.0.0.0:8888")
-        assert repr(node) == "TextNode(This is a text node, bold, http://0.0.0.0:8888)"
+        self.assertEqual(repr(node), "TextNode(This is a text node, bold, http://0.0.0.0:8888)")
         
     def test_url_default_value(self):
         node = TextNode("This is a text node", "bold")
