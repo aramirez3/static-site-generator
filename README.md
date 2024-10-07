@@ -1,2 +1,3 @@
 # static-site-generator
-Written in python
+
+MD to HTML site generator written in python
