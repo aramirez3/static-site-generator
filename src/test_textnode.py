@@ -60,15 +60,64 @@ class TestTextNode(AssertionHelper):
         self.assertEqual(leaf_node.value, value)
         self.assertEqual(leaf_node.props, props)
         
-    def test_raw_text_to_nodes(self):
-        node = TextNode("This is text with a `code block` word", TextTypes.TEXT.value)
-        new_nodes = split_nodes_delimiter([node], "`", TextTypes.CODE.value)
-        expected_nodes = [
+    def test_split_nodes_delimiter(self):
+        code = TextNode("This is text with a `code block` word", TextTypes.TEXT.value)
+        new_code = split_nodes_delimiter([code], "`", TextTypes.CODE.value)
+        expected_code = [
             TextNode("This is text with a ", TextTypes.TEXT.value, None),
             TextNode("code block", TextTypes.CODE.value, None),
             TextNode(" word", TextTypes.TEXT.value, None),
         ]
-        self.assertEqual(new_nodes, expected_nodes)
+        self.assertEqual(new_code, expected_code)
+        
+        bold = TextNode("Text with one **bold** word", TextTypes.TEXT.value)
+        new_bold = split_nodes_delimiter([bold], "**", TextTypes.BOLD.value)
+        expected_bold = [
+            TextNode("Text with one ", TextTypes.TEXT.value, None),
+            TextNode("bold", TextTypes.BOLD.value, None),
+            TextNode(" word", TextTypes.TEXT.value, None),
+        ]
+        self.assertEqual(new_bold, expected_bold)
+        
+        italic = TextNode("Text with *italicized words* bruh.", TextTypes.TEXT.value)
+        new_italic = split_nodes_delimiter([italic], "*", TextTypes.ITALIC.value)
+        expected_italic = [
+            TextNode("Text with ", TextTypes.TEXT.value, None),
+            TextNode("italicized words", TextTypes.ITALIC.value, None),
+            TextNode(" bruh.", TextTypes.TEXT.value, None),
+        ]
+        self.assertEqual(new_italic, expected_italic)
+    
+    def test_split_nodes_delimiter_multiple(self):
+        italic = TextNode("Text with *italicized words* multiple *times*.", TextTypes.TEXT.value)
+        new_italic = split_nodes_delimiter([italic], "*", TextTypes.ITALIC.value)
+        expected_italic = [
+            TextNode("Text with ", TextTypes.TEXT.value, None),
+            TextNode("italicized words", TextTypes.ITALIC.value, None),
+            TextNode(" multiple ", TextTypes.TEXT.value, None),
+            TextNode("times", TextTypes.ITALIC.value, None),
+            TextNode(".", TextTypes.TEXT.value, None),
+        ]
+        self.assertEqual(new_italic, expected_italic)
+    
+    def test_split_nodes_delimiter_edge_cases(self):
+        node = TextNode("No delimiters", TextTypes.TEXT.value)
+        new_node = split_nodes_delimiter([node], "", TextTypes.TEXT.value)
+        self.assertEqual(new_node, [TextNode("No delimiters", TextTypes.TEXT.value, None)])
+        
+        node= TextNode("", TextTypes.TEXT.value)
+        new_nodes = split_nodes_delimiter([node], "*", TextTypes.ITALIC.value)
+        self.assertEqual(new_nodes, [])
+        
+        
+        node= TextNode('Code with special chars: `"$url" =~ ^https?://([^/]+)`', TextTypes.TEXT.value)
+        new_nodes = split_nodes_delimiter([node], "`", TextTypes.CODE.value)
+        expected = [
+            TextNode('Code with special chars: ', TextTypes.TEXT.value, None),
+            TextNode('&quot;$url&quot; =~ ^https?://([^/]+)', TextTypes.CODE.value, None),
+        ]
+        self.assertEqual(new_nodes, expected)
+    
     
 if __name__ == "__main__":
     AssertionHelper.main()

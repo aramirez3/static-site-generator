@@ -1,6 +1,8 @@
+import html
+from enum import Enum
+
 from leafnode import LeafNode
 from textnode import TextNode
-from enum import Enum
 
 class TextTypes(Enum):
     TEXT = "text"
@@ -27,28 +29,26 @@ def text_node_to_html_node(text_node):
         raise ValueError("Not a valid text type")
     
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
+    if not delimiter:
+        return old_nodes
+    
     new_nodes = []
     for node in old_nodes:
-        if type(node).__name__ != TextNode.__name__:
+        if node.text_type != TextTypes.TEXT.value:
             new_nodes.append(node)
-        elif delimiter in node.text:
-            if node.text.count(delimiter) % 2 != 0:
-                raise TypeError("Invalid markdown")
-            new_list = delimiter_list_builder(node.text.split(delimiter), text_type)
-            new_nodes.extend(new_list)
-        else:
-            new_nodes.append(node)
+            continue
+        parts = node.text.split(delimiter)
+        if len(parts) % 2 == 0:
+            raise ValueError(f"Invalid markdown: Unmatched delimiters for {delimiter}")
+            
+        for i, part in enumerate(parts):
+            if part:
+                if i % 2 == 0:
+                    new_nodes.append(TextNode(part, TextTypes.TEXT.value))
+                else:
+                    new_nodes.append(TextNode(part, text_type))
+    
+    for node in new_nodes:
+        if node.text_type == TextTypes.CODE.value:
+            node.text = html.escape(node.text)
     return new_nodes
-
-def delimiter_list_builder(strings_list, text_type):
-    return_list = []
-    inside_delimited_section = False
-    for line in strings_list:
-        if inside_delimited_section:
-            node = TextNode(line, text_type)
-            inside_delimited_section = False
-        else:
-            node = TextNode(line, TextTypes.TEXT.value)
-            inside_delimited_section = True
-        return_list.append(node)
-    return return_list
