@@ -6,7 +6,7 @@ from htmlnode import HTMLNode
 class TestTextNode(unittest.TestCase):
     def test_default_values(self):
         node = HTMLNode()
-        self.assertEqual(node.tag, None)
+        self.assertEqual(node.tag, "")
         self.assertEqual(node.value, None)
         self.assertEqual(node.children, None)
         self.assertEqual(node.props, None)
