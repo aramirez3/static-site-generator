@@ -117,7 +117,18 @@ class TestTextNode(AssertionHelper):
             TextNode('&quot;$url&quot; =~ ^https?://([^/]+)', TextTypes.CODE.value, None),
         ]
         self.assertEqual(new_nodes, expected)
-    
+        
+    def test_extract_markdown_images(self):
+        text = "Text with a ![Ricky R](https://i.imgur.com/aKaOqIh.gif) and ![obi juan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        images = extract_markdown_images(text)
+        expected = [('Ricky R', 'https://i.imgur.com/aKaOqIh.gif'), ('obi juan', 'https://i.imgur.com/fJRm4Vk.jpeg')]
+        self.assertEqual(images, expected)
+        
+    def test_extract_markdown_links(self):
+        text = "Text with a link [to YouTube](https://youtu.be)"
+        links = extract_markdown_links(text)
+        expected = [('to YouTube', 'https://youtu.be')]
+        self.assertEqual(links, expected)
     
 if __name__ == "__main__":
     AssertionHelper.main()
