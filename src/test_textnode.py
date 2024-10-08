@@ -1,9 +1,9 @@
-import unittest
+from assertionhelper import AssertionHelper
 
 from textnode import TextNode
 
 
-class TestTextNode(unittest.TestCase):
+class TestTextNode(AssertionHelper):
     def test_eq(self):
         node = TextNode("This is a text node", "bold")
         node2 = TextNode("This is a text node", "bold")
@@ -23,4 +23,4 @@ class TestTextNode(unittest.TestCase):
         self.assertNotEqual(node, node2)
 
 if __name__ == "__main__":
-    unittest.main()
+    AssertionHelper.main()

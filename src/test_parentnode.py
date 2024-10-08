@@ -1,9 +1,13 @@
-import unittest
+from assertionhelper import AssertionHelper
 
 from parentnode import ParentNode
 from leafnode import LeafNode
 
-class TestParentNode(unittest.TestCase):
+class TestParentNode(AssertionHelper):
+    def test_repr(self):
+        node = ParentNode('p', ['a'], {"class":"all-of-them"})
+        self.assertEqual(repr(node), "ParentNode(p, ['a'], {'class': 'all-of-them'})")
+    
     def test_default_values(self):
         node = ParentNode('p', ['a'], {"class":"all-of-them"})
         self.assertEqual(node.tag, 'p')
@@ -11,19 +15,23 @@ class TestParentNode(unittest.TestCase):
         self.assertEqual(node.children, ['a'])
         self.assertEqual(node.props, {'class':'all-of-them'})
         
-    def test_to_html_no_children(self):
+    def test_to_html_children_empty_list(self):
         node = ParentNode('p', [], {"class":"all-of-them"})
-        self.assertRaises(ValueError, node.to_html(), msg="Parent.children is required")
-        node2 = ParentNode('p', None, {"class":"all-of-them"})
-        self.assertRaises(ValueError, node2.to_html(), msg="Parent.children is required")
+        self.assert_exception_and_message(node.to_html, ValueError, "Parent.children is required")
+        
+    def test_to_html_children_none(self):
+        node = ParentNode('p', None, {"class":"all-of-them"})
+        self.assert_exception_and_message(node.to_html, ValueError, "Parent.children is required")
         
     def test_to_html_no_tag(self):
         node = ParentNode(None, ['td', 'td'], {"class":"row"})
-        self.assertRaises(ValueError, node.to_html(), msg="Parent node must have a tag")
+        self.assert_exception_and_message(node.to_html, ValueError, "Parent node must have a tag")
         
     def test_to_html(self):
         child1 = LeafNode('p', 'This is a paragraph')
-        child2 = LeafNode('p', 'This is my second paragraph.')
-        child3 = LeafNode('p', 'Third???!?!?!?!')
-        node = ParentNode('section', [child1, child2, child3], {"class":"content"})
-        print(node.to_html)
+        node = ParentNode('section', [child1], {"class":"content"})
+        self.assertEqual(node.to_html(), '<section class="content"><p>This is a paragraph</p></section>')
+        
+
+if __name__ == "__main__":
+    AssertionHelper.main()

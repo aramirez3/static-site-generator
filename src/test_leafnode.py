@@ -1,8 +1,8 @@
-import unittest
+from assertionhelper import AssertionHelper
 
 from leafnode import LeafNode
 
-class TestLeafNode(unittest.TestCase):
+class TestLeafNode(AssertionHelper):
     def test_default_values(self):
         node = LeafNode('p', 'Best paragraph ever!', {"class":"p-4 my-8"})
         self.assertEqual(node.tag, "p")
@@ -24,7 +24,8 @@ class TestLeafNode(unittest.TestCase):
 
     def test_to_html_no_value(self):
         node = LeafNode('p', None, {"class":"red"})
-        self.assertRaises(ValueError, node.to_html(), msg="Leaf node must contain a value")
+        self.assert_exception_and_message(node.to_html, ValueError, "Leaf node must contain a value")
+        
         
 if __name__ == "__main__":
-    unittest.main()
+    AssertionHelper.main()
