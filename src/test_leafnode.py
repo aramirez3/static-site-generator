@@ -24,7 +24,7 @@ class TestLeafNode(unittest.TestCase):
 
     def test_to_html_no_value(self):
         node = LeafNode('p', None, {"class":"red"})
-        self.assertRaises(ValueError)
+        self.assertRaises(ValueError, node.to_html(), msg="Leaf node must contain a value")
         
 if __name__ == "__main__":
     unittest.main()
