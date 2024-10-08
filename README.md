@@ -1,3 +1,3 @@
-# static-site-generator
+# Static Site Generator
 
-MD to HTML site generator written in python
+Created a SSG in python. Docs are written in md and output to a `/public` directory containing static files.
