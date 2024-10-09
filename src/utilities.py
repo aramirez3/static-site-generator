@@ -113,3 +113,12 @@ def split_nodes_link(old_nodes):
         if start < len(remaining_text):
             nodes_list.append(TextNode(remaining_text[start:], TextTypes.TEXT.value))
     return nodes_list
+
+def text_to_textnodes(text):
+    text_node = TextNode(text, TextTypes.TEXT.value)
+    html_nodes = text_node_to_html_node(text_node)
+    print(f"\n\n {html_nodes} \n\n")
+    split_nodes = split_nodes_delimiter([text_node], "**", TextTypes.TEXT.value)
+    print(f"\n\n {split_nodes} \n\n")
+    nodes = []
+    return nodes

@@ -169,6 +169,24 @@ class TestTextNode(AssertionHelper):
             TextNode("link", TextTypes.LINK.value, "http://localhost/home"),
         ]
         self.assertEqual(node_list, expected)
-    
+        
+    def test_text_to_textnodes(self):
+        text = "This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+        nodes = text_to_textnodes(text)
+        expected = [
+            TextNode("This is ", TextTypes.TEXT.value),
+            TextNode("text", TextTypes.BOLD.value),
+            TextNode(" with an ", TextTypes.TEXT.value),
+            TextNode("italic", TextTypes.ITALIC.value),
+            TextNode(" word and a ", TextTypes.TEXT.value),
+            TextNode("code block", TextTypes.CODE.value),
+            TextNode(" and an ", TextTypes.TEXT.value),
+            TextNode("obi wan image", TextTypes.IMAGE.value, "https://i.imgur.com/fJRm4Vk.jpeg"),
+            TextNode(" and a ", TextTypes.TEXT.value),
+            TextNode("link", TextTypes.LINK.value, "https://boot.dev"),
+        ]
+        self.assertEqual(nodes, expected)
+        
+        
 if __name__ == "__main__":
     AssertionHelper.main()
