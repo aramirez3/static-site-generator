@@ -61,7 +61,23 @@ def extract_markdown_links(text):
     return re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
 
 def split_nodes_image(old_nodes):
-    pass
+    nodes_list = []
+    return nodes_list
 
 def split_nodes_link(old_nodes):
-    pass
+    nodes_list = []
+    for node in old_nodes:
+        links = extract_markdown_links(node.text)
+        if len(links):
+            for link in links:
+                print(f"::::thelink: {link}::::")
+                parts = node.text.split(f"[{link[0]}]({link[1]})")
+                if parts:
+                    print(f"parts: {parts}")
+                    for i, part in enumerate(parts):
+                        if i % 2 == 0:
+                            nodes_list.append(TextNode(part, TextTypes.TEXT.value))
+                        else:
+                            nodes_list.append(TextNode(link[0], TextTypes.LINK.value, link[1]))
+    print(f"nodes_list: {nodes_list}")                            
+    return nodes_list

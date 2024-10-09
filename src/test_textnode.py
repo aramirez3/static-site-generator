@@ -129,6 +129,26 @@ class TestTextNode(AssertionHelper):
         links = extract_markdown_links(text)
         expected = [('to YouTube', 'https://youtu.be')]
         self.assertEqual(links, expected)
+        
+    def test_split_nodes_image(self):
+        # node = TextNode("Text with a ![Ricky R](https://i.imgur.com/aKaOqIh.gif) and ![obi juan](https://i.imgur.com/fJRm4Vk.jpeg)", TextTypes.TEXT.value)
+        # node_list = split_nodes_image([node])
+        # expected = [
+        #     TextNode("Text with a ", TextTypes.TEXT.value, None),
+        #     TextNode("Ricky R", TextTypes.IMAGE.value, "https://i.imgur.com/aKaOqIh.gif"),
+        #     TextNode("obi juan", TextTypes.IMAGE.value, "https://i.imgur.com/fJRm4Vk.jpeg"),
+        # ]
+        # self.asssertEqual(nodes_list, expected)
+        pass
+        
+    def test_split_nodes_link(self):
+        node = TextNode("Text with a link [to YouTube](https://youtu.be)", TextTypes.TEXT.value)
+        node_list = split_nodes_link([node])
+        expected = [
+            TextNode("Text with a link ", TextTypes.TEXT.value, None),
+            TextNode("to YouTube", TextTypes.LINK.value, "https://youtu.be")
+        ]
+        self.assertEqual(node_list, expected)
     
 if __name__ == "__main__":
     AssertionHelper.main()
