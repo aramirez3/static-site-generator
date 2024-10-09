@@ -13,6 +13,16 @@ class TextTypes(Enum):
     LINK = "link"
     IMAGE = "image"
     
+class Delimiters(Enum):
+    TEXT = ""
+    BOLD = "**"
+    ITALIC = "*"
+    CODE = "`"
+    
+def debug_print(the_string):
+    print("\n:::::::::::")
+    print(the_string)
+    
 def text_node_to_html_node(text_node):
     if text_node.text_type == TextTypes.TEXT.value:
         return LeafNode("", text_node.text)
@@ -116,9 +126,18 @@ def split_nodes_link(old_nodes):
 
 def text_to_textnodes(text):
     text_node = TextNode(text, TextTypes.TEXT.value)
-    html_nodes = text_node_to_html_node(text_node)
-    print(f"\n\n {html_nodes} \n\n")
-    split_nodes = split_nodes_delimiter([text_node], "**", TextTypes.TEXT.value)
-    print(f"\n\n {split_nodes} \n\n")
-    nodes = []
+    # convert text to nodes (string -> list of nodes)
+    # bold
+    nodes = split_nodes_delimiter([text_node], Delimiters.BOLD.value, TextTypes.BOLD.value)
+    # italic
+    nodes = split_nodes_delimiter(nodes, Delimiters.ITALIC.value, TextTypes.ITALIC.value)
+    # code
+    nodes = split_nodes_delimiter(nodes, Delimiters.CODE.value, TextTypes.CODE.value)
+    
+    # split up the link and image nodes
+    # links
+    nodes = split_nodes_link(nodes)
+    # images
+    nodes = split_nodes_image(nodes)
+    
     return nodes
