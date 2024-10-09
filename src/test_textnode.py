@@ -131,22 +131,42 @@ class TestTextNode(AssertionHelper):
         self.assertEqual(links, expected)
         
     def test_split_nodes_image(self):
-        # node = TextNode("Text with a ![Ricky R](https://i.imgur.com/aKaOqIh.gif) and ![obi juan](https://i.imgur.com/fJRm4Vk.jpeg)", TextTypes.TEXT.value)
-        # node_list = split_nodes_image([node])
-        # expected = [
-        #     TextNode("Text with a ", TextTypes.TEXT.value, None),
-        #     TextNode("Ricky R", TextTypes.IMAGE.value, "https://i.imgur.com/aKaOqIh.gif"),
-        #     TextNode("obi juan", TextTypes.IMAGE.value, "https://i.imgur.com/fJRm4Vk.jpeg"),
-        # ]
-        # self.asssertEqual(nodes_list, expected)
-        pass
+        node = TextNode("Text with a ![Ricky R](https://i.imgur.com/aKaOqIh.gif) and ![obi juan](https://i.imgur.com/fJRm4Vk.jpeg)", TextTypes.TEXT.value)
+        node_list = split_nodes_image([node])
+        expected = [
+            TextNode("Text with a ", TextTypes.TEXT.value, None),
+            TextNode("Ricky R", TextTypes.IMAGE.value, "https://i.imgur.com/aKaOqIh.gif"),
+            TextNode(" and ", TextTypes.TEXT.value, None),
+            TextNode("obi juan", TextTypes.IMAGE.value, "https://i.imgur.com/fJRm4Vk.jpeg"),
+        ]
+        self.assertEqual(node_list, expected)
         
     def test_split_nodes_link(self):
-        node = TextNode("Text with a link [to YouTube](https://youtu.be)", TextTypes.TEXT.value)
+        node1 = TextNode("Text with a link [to YouTube](https://youtu.be). Sweet", TextTypes.TEXT.value)
+        node1_list = split_nodes_link([node1])
+        expected1 = [
+            TextNode("Text with a link ", TextTypes.TEXT.value, None),
+            TextNode("to YouTube", TextTypes.LINK.value, "https://youtu.be"),
+            TextNode(". Sweet", TextTypes.TEXT.value, None)
+        ]
+        self.assertEqual(node1_list, expected1)
+        
+        node2 = TextNode("Two nodes [with link](http://localhost)", TextTypes.TEXT.value)
+        node2_list = split_nodes_link([node2])
+        expected2 = [
+            TextNode("Two nodes ", TextTypes.TEXT.value, None),
+            TextNode("with link", TextTypes.LINK.value, "http://localhost"),
+        ]
+        self.assertEqual(node2_list, expected2)
+        
+    def test_split_nodes_multiple_links(self):
+        node = TextNode("Text [with link](http://localhost) with another [link](http://localhost/home)", TextTypes.TEXT.value)
         node_list = split_nodes_link([node])
         expected = [
-            TextNode("Text with a link ", TextTypes.TEXT.value, None),
-            TextNode("to YouTube", TextTypes.LINK.value, "https://youtu.be")
+            TextNode("Text ", TextTypes.TEXT.value, None),
+            TextNode("with link", TextTypes.LINK.value, "http://localhost"),
+            TextNode(" with another ", TextTypes.TEXT.value, None),
+            TextNode("link", TextTypes.LINK.value, "http://localhost/home"),
         ]
         self.assertEqual(node_list, expected)
     

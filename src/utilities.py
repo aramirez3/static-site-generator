@@ -62,22 +62,54 @@ def extract_markdown_links(text):
 
 def split_nodes_image(old_nodes):
     nodes_list = []
+    for node in old_nodes:
+        if node.text_type != TextTypes.TEXT.value:
+            nodes_list.append(node)
+            continue
+        
+        remaining_text = node.text
+        images = extract_markdown_images(remaining_text)
+        
+        if not images:
+            nodes_list.append(node)
+            continue
+        
+        start = 0
+        for alt_text, image_url in images:
+            image_string = f"![{alt_text}]({image_url})"
+            image_start = remaining_text.index(image_string, start)
+            if image_start > start:
+                nodes_list.append(TextNode(remaining_text[start:image_start], TextTypes.TEXT.value))
+            nodes_list.append(TextNode(alt_text, TextTypes.IMAGE.value, image_url))
+            start = image_start + len(image_string)
+            
+        if start < len(remaining_text):
+            nodes_list.append(TextNode(remaining_text[start:], TextTypes.TEXT.value))
     return nodes_list
 
 def split_nodes_link(old_nodes):
     nodes_list = []
     for node in old_nodes:
-        links = extract_markdown_links(node.text)
-        if len(links):
-            for link in links:
-                print(f"::::thelink: {link}::::")
-                parts = node.text.split(f"[{link[0]}]({link[1]})")
-                if parts:
-                    print(f"parts: {parts}")
-                    for i, part in enumerate(parts):
-                        if i % 2 == 0:
-                            nodes_list.append(TextNode(part, TextTypes.TEXT.value))
-                        else:
-                            nodes_list.append(TextNode(link[0], TextTypes.LINK.value, link[1]))
-    print(f"nodes_list: {nodes_list}")                            
+        if node.text_type != TextTypes.TEXT.value:
+            nodes_list.append(node)
+            continue
+        
+        remaining_text = node.text
+        links = extract_markdown_links(remaining_text)
+        
+        if not links:
+            nodes_list.append(node)
+            continue
+        
+        start = 0
+        for link_text, link_url in links:
+            link_string = f"[{link_text}]({link_url})"
+            link_start = remaining_text.index(link_string, start)
+            if link_start > start:
+                nodes_list.append(TextNode(remaining_text[start:link_start], TextTypes.TEXT.value))
+            nodes_list.append(TextNode(link_text, TextTypes.LINK.value, link_url))
+            start = link_start + len(link_string)
+            
+        if start < len(remaining_text):
+            nodes_list.append(TextNode(remaining_text[start:], TextTypes.TEXT.value))
     return nodes_list
