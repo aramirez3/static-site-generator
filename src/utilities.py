@@ -19,6 +19,14 @@ class Delimiters(Enum):
     ITALIC = "*"
     CODE = "`"
     
+class BlockTypes(Enum):
+    PARAGRAPH = "paragraph"
+    HEADING = "heading"
+    CODE = "code"
+    QUOTE = "quote"
+    UNORDERED_LIST = "unordered_list"
+    ORDERED_LIST = "ordered_list"
+    
 def debug_print(the_string):
     print("\n:::::::::::")
     print(the_string)

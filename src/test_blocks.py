@@ -9,7 +9,7 @@ from utilities import *
 
 class TestTextNode(AssertionHelper):
     def test_markdown_to_blocks(self):
-        text = markdown_text = """
+        text = """
 # This is a heading
 
 This is a paragraph of text. It has some **bold** and *italic* words inside of it.
@@ -53,6 +53,19 @@ This is the same paragraph on a new line
         ]
         
         actual = markdown_to_blocks(markdown_text)
+        self.assertEqual(actual, expected)
+        
+    def test_heading_blocks(self):
+        for i in range(1,7):
+            text = f"{i * '#'} This is a heading"
+            expected = BlockTypes.HEADING.value
+            actual = block_to_block_types(text)
+            self.assertEqual(actual, expected)
+            
+    def test_heading_blocks(self):
+        text = f"```print('Hello world')```"
+        expected = BlockTypes.CODE.value
+        actual = block_to_block_types(text)
         self.assertEqual(actual, expected)
         
 if __name__ == "__main__":
