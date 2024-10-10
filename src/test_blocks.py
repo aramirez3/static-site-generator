@@ -55,16 +55,52 @@ This is the same paragraph on a new line
         actual = markdown_to_blocks(markdown_text)
         self.assertEqual(actual, expected)
         
-    def test_heading_blocks(self):
+    def test_md_blocks_headings(self):
         for i in range(1,7):
             text = f"{i * '#'} This is a heading"
             expected = BlockTypes.HEADING.value
             actual = block_to_block_types(text)
             self.assertEqual(actual, expected)
             
-    def test_heading_blocks(self):
-        text = f"```print('Hello world')```"
+    def test_md_blocks_code(self):
+        text = "```print('Hello world')```"
         expected = BlockTypes.CODE.value
+        actual = block_to_block_types(text)
+        self.assertEqual(actual, expected)
+        
+    def test_md_blocks_quote(self):
+        text = "> To be or not to be"
+        expected = BlockTypes.QUOTE.value
+        actual = block_to_block_types(text)
+        self.assertEqual(actual, expected)
+        
+    def test_md_blocks_unordered_list_asterisk(self):
+        text = """* first item
+* second item
+* third item"""
+        expected = BlockTypes.UNORDERED_LIST.value
+        actual = block_to_block_types(text)
+        self.assertEqual(actual, expected)
+        
+    def test_md_blocks_unordered_list_hyphen(self):
+        text = """- first item
+- second item
+- third item"""
+        expected = BlockTypes.UNORDERED_LIST.value
+        actual = block_to_block_types(text)
+        self.assertEqual(actual, expected)
+        
+    def test_md_blocks_ordered_list(self):
+        text = """1. first item
+2. second item
+3. third item"""
+        expected = BlockTypes.ORDERED_LIST.value
+        actual = block_to_block_types(text)
+        self.assertEqual(actual, expected)
+        
+    def test_md_blocks_paragraph(self):
+        text = "The quick brown fox jumped over the lazy dog."
+        expected = BlockTypes.PARAGRAPH.value
         actual = block_to_block_types(text)
         self.assertEqual(actual, expected)
         
