@@ -1,4 +1,4 @@
-from inlines import *
+from md_inlines import *
 
 from unittest.result import TestResult
 from assertionhelper import AssertionHelper

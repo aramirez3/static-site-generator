@@ -1,4 +1,4 @@
-from blocks import *
+from md_blocks import *
 
 from unittest.result import TestResult
 from assertionhelper import AssertionHelper

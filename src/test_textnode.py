@@ -3,7 +3,7 @@ from assertionhelper import AssertionHelper
 
 from textnode import TextNode
 from utilities import *
-from inlines import *
+from md_inlines import *
 
 
 class TestTextNode(AssertionHelper):
