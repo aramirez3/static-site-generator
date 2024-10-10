@@ -19,15 +19,39 @@ def markdown_to_blocks(md):
         blocks.append(line)
     return blocks
 
-def block_to_block_types(md_line):
-    if re.match(regex_values["headings"], md_line):
+def block_to_block_types(md_block):
+    lines = md_block.split("\n")
+    if md_block.startswith(("# ", "## ", "### ", "#### ", "##### ", "###### ")):
         return BlockTypes.HEADING.value
-    if re.match(regex_values["code"], md_line):
-        return BlockTypes.CODE.value
-    if re.match(regex_values["quote"], md_line):
+
+    if md_block.startswith("```"):
+        if len(lines) > 1 and lines[0].startswith("```") and lines[-1]:
+            return BlockTypes.CODE.value
+
+    if md_block.startswith(">"):
+        for line in lines:
+            if not line.startswith(">"):
+                return BlockTypes.PARAGRAPH.value
         return BlockTypes.QUOTE.value
-    if re.search(regex_values["unordered_list"], md_line):
+
+    if md_block.startswith("* "):
+        for line in lines:
+            if not line.startswith("* "):
+                return BlockTypes.PARAGRAPH.value
         return BlockTypes.UNORDERED_LIST.value
-    if re.search(regex_values["ordered_list"], md_line):
+    
+    if md_block.startswith("- "):
+        for line in lines:
+            if not line.startswith("- "):
+                return BlockTypes.PARAGRAPH.value
+        return BlockTypes.UNORDERED_LIST.value
+
+    if md_block.startswith("1. "):
+        i = 1
+        for line in lines:
+            if not line.startswith(f"{i}. "):
+                return BlockTypes.PARAGRAPH.value
+            i += 1
         return BlockTypes.ORDERED_LIST.value
+
     return BlockTypes.PARAGRAPH.value
