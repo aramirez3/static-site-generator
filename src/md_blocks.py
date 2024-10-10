@@ -1,13 +1,4 @@
 from utilities import *
-import re
-
-regex_values = {
-    "headings": r"^(#{1,6})\s",
-    "code": r"^(\`{3}).*\`{3}",
-    "quote": r"^(\>{1}.*)",
-    "unordered_list": r"^(\-|\*)\s",
-    "ordered_list": "working on this piece"
-}
 
 def markdown_to_blocks(md):
     lines = md.split("\n\n")
