@@ -10,19 +10,53 @@ from htmlnode import HTMLNode
 
 class TestTextNode(AssertionHelper):
     def test_md(self):
+        actual = markdown_to_html_node("Regular paragraph.\nNew line in same paragraph.")
+        expected = []
+        html_node = HTMLNode("p", "Regular paragraph.\nNew line in same paragraph.")
+        expected.append(html_node)
+        self.assertEqual(actual, [expected])
+        
+    def test_md_heading(self):
         actual = markdown_to_html_node("# h1 heading")
         expected = []
         html_node = HTMLNode("h1", "h1 heading")
         expected.append(html_node)
-        print("")
-        print(f"value: {actual[0].value == html_node.value}")
-        print(f"tag: {actual[0].tag == html_node.tag}")
-        print(f"children: {actual[0].children == html_node.children}")
-        print(f"props: {actual[0].props == html_node.props}")
-        print(f"object: {actual[0] == html_node}")
-        print(f"type: {type(actual[0]) == type(html_node)}")
-        print(f"{actual[0]} -- {html_node}")
-        self.assertEqual(actual[0], expected)
+        self.assertEqual(actual, [expected])
+        
+    def test_md_code(self):
+        actual = markdown_to_html_node("```console.log('what')```")
+        expected = []
+        html_node = HTMLNode("pre", "console.log('what')")
+        expected.append(html_node)
+        self.assertEqual(actual, [expected])
+        
+    def test_md_quote(self):
+        actual = markdown_to_html_node("> The Rock says")
+        expected = []
+        html_node = HTMLNode("blockquote", "The Rock says")
+        expected.append(html_node)
+        self.assertEqual(actual, [expected])
+        
+    def test_md_ul_hyphen(self):
+        actual = markdown_to_html_node("- first\n- second\n- third")
+        expected = []
+        html_node = HTMLNode("blockquote", "first\nsecond\nthird")
+        expected.append(html_node)
+        self.assertEqual(actual, [expected])
+        
+    def test_md_ul_asterisk(self):
+        actual = markdown_to_html_node("* first\n* second\n* third")
+        expected = []
+        html_node = HTMLNode("blockquote", "first\nsecond\nthird")
+        expected.append(html_node)
+        self.assertEqual(actual, [expected])
+        
+    def test_md_ol(self):
+        actual = markdown_to_html_node("1. first\n2. second\n3. third")
+        expected = []
+        html_node = HTMLNode("blockquote", "first\nsecond\nthird")
+        expected.append(html_node)
+        self.assertEqual(actual, [expected])
     
     def test_get_block_text_heading(self):
         actual = get_block_text("### h3 heading", BlockTypes.HEADING.value)
