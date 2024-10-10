@@ -9,7 +9,7 @@ from utilities import *
 
 class TestTextNode(AssertionHelper):
         
-    def test_split_nodes_delimiter(self):
+    def test_split_nodes_delimiter_code(self):
         code = TextNode("This is text with a `code block` word", TextTypes.TEXT.value)
         new_code = split_nodes_delimiter([code], Delimiters.CODE.value, TextTypes.CODE.value)
         expected_code = [
@@ -18,7 +18,8 @@ class TestTextNode(AssertionHelper):
             TextNode(" word", TextTypes.TEXT.value, None),
         ]
         self.assertEqual(new_code, expected_code)
-        
+    
+    def test_split_nodes_delimiter_bold(self):    
         bold = TextNode("Text with one **bold** word", TextTypes.TEXT.value)
         new_bold = split_nodes_delimiter([bold], Delimiters.BOLD.value, TextTypes.BOLD.value)
         expected_bold = [
@@ -28,6 +29,7 @@ class TestTextNode(AssertionHelper):
         ]
         self.assertEqual(new_bold, expected_bold)
         
+    def test_split_nodes_delimiter_italic(self):
         italic = TextNode("Text with *italicized words* bruh.", TextTypes.TEXT.value)
         new_italic = split_nodes_delimiter([italic], Delimiters.ITALIC.value, TextTypes.ITALIC.value)
         expected_italic = [
