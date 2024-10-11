@@ -2,12 +2,17 @@ from utilities import *
 
 def markdown_to_blocks(md):
     lines = md.split("\n\n")
+    print(f"lines: {lines}")
     blocks = []
+    print(f"blocks: {blocks}")
     for line in lines:
         if line == "":
             continue
+        print(f"line: {line}")
         line = line.strip()
+        print(f"line: {line}")
         blocks.append(line)
+    print(f"blocks: {blocks}")
     return blocks
 
 def block_to_block_types(md_block):

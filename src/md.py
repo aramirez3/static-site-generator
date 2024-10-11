@@ -9,6 +9,7 @@ def markdown_to_html_node(markdown):
     
     for block in blocks:
         block_type = block_to_block_types(block)
+        print(f"block::{block_type}:: {block} ")
         node = block_to_html(block, block_type)
         ## get children from block text
         html_nodes.append(node)
@@ -42,29 +43,15 @@ def get_block_text(block, block_type):
         case BlockTypes.PARAGRAPH.value:
             return block
         case BlockTypes.HEADING.value:
-            block_text = remove_leading_chars_single_line(block, regex_values[block_type])
-            return block_text
+            prefix = re.match(r"(\#{1,6}\s)", block).group(1)
+            return block.removeprefix(prefix)
         case BlockTypes.CODE.value:
-            block_text = ""
-            return block_text
+            block = block.removeprefix("```")
+            block = block.removesuffix("```")
+            return block
         case BlockTypes.QUOTE.value:
-            block_text = remove_leading_chars_single_line(block, "> ")
-            return block_text
+            return block.removeprefix("> ")
         case BlockTypes.UNORDERED_LIST.value:
-            block_text = remove_leading_chars_list(block, block_type)
-            return block_text
+            return block
         case BlockTypes.ORDERED_LIST.value:
-            block_text = remove_leading_chars_list(block, block_type)
-            return block_text
-
-def remove_leading_chars_single_line(block, regex):
-    loc = regex_match(regex, block).span()
-    return block[loc[1]+1:]
-
-def remove_leading_chars_list(block, block_type):
-    text = ""
-    return text
-
-def remove_leading_chars_code(block):
-    text = ""
-    return text
+            return block

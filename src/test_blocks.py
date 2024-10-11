@@ -18,6 +18,11 @@ class TestTextNode(AssertionHelper):
         ]
         self.assertEqual(actual, expected)
         
+    def test_markdown_to_blocks_code(self):
+        actual = markdown_to_blocks("```print('hello world')```")
+        expected = ["```print('hello world')```"]
+        self.assertEqual(actual, expected)
+        
     def test_markdown_to_blocks_empty(self):
         actual = markdown_to_blocks("")
         expected = []
