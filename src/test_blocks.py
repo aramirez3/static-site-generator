@@ -3,7 +3,7 @@ from md_blocks import *
 from unittest.result import TestResult
 from assertionhelper import AssertionHelper
 
-from textnode import TextNode
+from parentnode import ParentNode
 from utilities import *
 
 
@@ -82,5 +82,30 @@ class TestTextNode(AssertionHelper):
         actual = block_to_block_types(text)
         self.assertEqual(actual, expected)
         
+    def test_block_to_block_type(self):
+        block = "This is a paragraph"
+        self.assertEqual(block_to_block_types(block), BlockTypes.PARAGRAPH.value)
+        block = "# This is an h1"
+        self.assertEqual(block_to_block_types(block), BlockTypes.HEADING.value)
+        block = "> This is a quote"
+        self.assertEqual(block_to_block_types(block), BlockTypes.QUOTE.value)
+        block = "* this is an unordered list"
+        self.assertEqual(block_to_block_types(block), BlockTypes.UNORDERED_LIST.value)
+        block = "- this is an unordered list"
+        self.assertEqual(block_to_block_types(block), BlockTypes.UNORDERED_LIST.value)
+        block = "1. this is an ordered list"
+        self.assertEqual(block_to_block_types(block), BlockTypes.ORDERED_LIST.value)
+        block = "```\nThis is code\n```"
+        self.assertEqual(block_to_block_types(block), BlockTypes.CODE.value)
+        
+    def test_block_to_html_node(self):
+        markdown = """# Hello world
+
+This is a cool test."""
+        html = markdown_to_html_node(markdown)
+        debug_print(html)
+        pass
+    
+    
 if __name__ == "__main__":
     AssertionHelper.main()
