@@ -98,13 +98,39 @@ class TestTextNode(AssertionHelper):
         block = "```\nThis is code\n```"
         self.assertEqual(block_to_block_types(block), BlockTypes.CODE.value)
         
-    def test_block_to_html_node(self):
-        markdown = """# Hello world
-
-This is a cool test."""
+    def test_block_to_paragraph_node(self):
+        markdown = "Regular paragraph.\nNew line."
         html = markdown_to_html_node(markdown)
-        debug_print(html)
-        pass
+        child_node = html.children[0]
+        self.assertEqual(html.tag, "div")
+        self.assertEqual(child_node.tag, "p")
+        self.assertEqual(child_node.children[0].tag, "")
+        self.assertEqual(child_node.children[0].value, "Regular paragraph. New line.")
+        self.assertEqual(child_node.children[0].props, None)
+        
+    def test_block_to_html_node(self):
+        markdown = "# Heading1"
+        html = markdown_to_html_node(markdown)
+        child_node = html.children[0]
+        self.assertEqual(html.tag, "div")
+        self.assertEqual(child_node.tag, "h1")
+        self.assertEqual(child_node.props, None)
+        self.assertEqual(child_node.children[0].tag, "")
+        self.assertEqual(child_node.children[0].value, "Heading1")
+        self.assertEqual(child_node.children[0].props, None)
+        
+    def test_block_to_code_node(self):
+        markdown = "> Don't quote me"
+        html = markdown_to_html_node(markdown)
+        child_node = html.children[0]
+        print(html)
+        self.assertEqual(html.tag, "div")
+        self.assertEqual(child_node.tag, "blockquote")
+        self.assertEqual(child_node.props, None)
+        self.assertEqual(child_node.children[0].tag, "")
+        self.assertEqual(child_node.children[0].value, "Don't quote me")
+        self.assertEqual(child_node.children[0].props, None)
+    
     
     
 if __name__ == "__main__":

@@ -55,32 +55,31 @@ def markdown_to_html_node(markdown):
     nodes = []
     for block in blocks:
         node = block_to_html_node(block)
+        nodes.append(node)
     return ParentNode("div", nodes)
 
 def block_to_html_node(block):
     block_type = block_to_block_types(block)
-    # check each type and use appropriate helper
+    print(f"block:{block}::block_type:{block_type}")
     if block_type == BlockTypes.PARAGRAPH.value:
         return paragraph_to_html_node(block)
     if block_type == BlockTypes.HEADING.value:
-        return paragraph_to_html_node(block)
+        return heading_to_html_node(block)
     if block_type == BlockTypes.QUOTE.value:
-        return paragraph_to_html_node(block)
+        return quote_to_html_node(block)
     if block_type == BlockTypes.CODE.value:
-        return paragraph_to_html_node(block)
+        return code_to_html_node(block)
     if block_type == BlockTypes.UNORDERED_LIST.value:
-        return paragraph_to_html_node(block)
+        return unordered_list_to_html_node(block)
     if block_type == BlockTypes.ORDERED_LIST.value:
-        return paragraph_to_html_node(block)
+        return ordered_list_to_html_node(block)
     pass
 
 def text_to_children(text):
     children = []
     nodes = text_to_textnodes(text)
-    print(f'from text_to_children:::nodes:::{nodes}')
     for node in nodes:
         html_node = text_node_to_html_node(node)
-        print(f"html_node: {html_node}")
         children.append(html_node)
     return children
 
@@ -91,18 +90,27 @@ def paragraph_to_html_node(block):
     return ParentNode("p", children)
 
 def heading_to_html_node(block):
-    pass
+    h_level = 0
+    for ch in block:
+        if ch == "#":
+            h_level += 1
+    if h_level + 1 > len(block):
+        raise ValueError(f"Invalid heading level {h_level}")
+    text = block[h_level + 1:]
+    children = text_to_children(text)
+    print(f"heading_to_html::text:{text}::children::{children}::tag:h{h_level}")
+    return ParentNode(f"h{h_level}", children)
 
 def quote_to_html_node(block):
-    pass
+    text = block.split("> ")
+    children = text_to_children(text[1])
+    return ParentNode("blockquote", children)
 
 def code_to_html_node(block):
-    pass
+    return block
 
 def ordered_list_to_html_node(block):
-    pass
+    return block
 
 def unordered_list_to_html_node(block):
-    pass
-
-# ... [eachtype]_to_html_node
+    return block
