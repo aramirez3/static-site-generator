@@ -52,15 +52,14 @@ def block_to_block_types(md_block):
 
 def markdown_to_html_node(markdown):
     blocks = markdown_to_blocks(markdown)
-    nodes = []
+    child_nodes = []
     for block in blocks:
         node = block_to_html_node(block)
-        nodes.append(node)
-    return ParentNode("div", nodes)
+        child_nodes.append(node)
+    return ParentNode("div", child_nodes)
 
 def block_to_html_node(block):
     block_type = block_to_block_types(block)
-    print(f"block:{block}::block_type:{block_type}")
     if block_type == BlockTypes.PARAGRAPH.value:
         return paragraph_to_html_node(block)
     if block_type == BlockTypes.HEADING.value:
@@ -98,7 +97,6 @@ def heading_to_html_node(block):
         raise ValueError(f"Invalid heading level {h_level}")
     text = block[h_level + 1:]
     children = text_to_children(text)
-    print(f"heading_to_html::text:{text}::children::{children}::tag:h{h_level}")
     return ParentNode(f"h{h_level}", children)
 
 def quote_to_html_node(block):
@@ -107,7 +105,11 @@ def quote_to_html_node(block):
     return ParentNode("blockquote", children)
 
 def code_to_html_node(block):
-    return block
+    if not block.startswith("```") and not block.endswith("```"):
+        raise ValueError("Invalid code block")
+    children = text_to_children(block[4:-3])
+    code = ParentNode("code", children)
+    return ParentNode("pre", [code])
 
 def ordered_list_to_html_node(block):
     return block

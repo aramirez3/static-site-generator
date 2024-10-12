@@ -14,9 +14,6 @@ class ParentNode(HTMLNode):
         if self.tag is None:
             raise ValueError("Parent node must have a tag")
         html_string = ""
-        for c in self.children:
-            if type(c).__name__ == "LeafNode":
-                html_string += c.to_html()
-            elif type(c).__name__ == "ParentNode":
-                return c.children.to_html()
+        for child in self.children:
+                html_string += child.to_html()
         return f"<{self.tag}{self.props_to_html()}>{html_string}</{self.tag}>"

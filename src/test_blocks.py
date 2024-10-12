@@ -99,38 +99,36 @@ class TestTextNode(AssertionHelper):
         self.assertEqual(block_to_block_types(block), BlockTypes.CODE.value)
         
     def test_block_to_paragraph_node(self):
-        markdown = "Regular paragraph.\nNew line."
-        html = markdown_to_html_node(markdown)
-        child_node = html.children[0]
-        self.assertEqual(html.tag, "div")
-        self.assertEqual(child_node.tag, "p")
-        self.assertEqual(child_node.children[0].tag, "")
-        self.assertEqual(child_node.children[0].value, "Regular paragraph. New line.")
-        self.assertEqual(child_node.children[0].props, None)
+        markdown = "Regular paragraph. With some **bold** text."
+        html_node = markdown_to_html_node(markdown)
+        html = html_node.to_html()
+        self.assertEqual(html, "<div><p>Regular paragraph. With some <b>bold</b> text.</p></div>")
         
     def test_block_to_html_node(self):
-        markdown = "# Heading1"
-        html = markdown_to_html_node(markdown)
-        child_node = html.children[0]
-        self.assertEqual(html.tag, "div")
-        self.assertEqual(child_node.tag, "h1")
-        self.assertEqual(child_node.props, None)
-        self.assertEqual(child_node.children[0].tag, "")
-        self.assertEqual(child_node.children[0].value, "Heading1")
-        self.assertEqual(child_node.children[0].props, None)
+        markdown = """# How to write markdown
+
+Go to the googles. Search for chat gippity.
+
+Ask gippity to google for you."""
+        html_node = markdown_to_html_node(markdown)
+        html = html_node.to_html()
+        self.assertEqual(html, "<div><h1>How to write markdown</h1><p>Go to the googles. Search for chat gippity.</p><p>Ask gippity to google for you.</p></div>")
         
-    def test_block_to_code_node(self):
+    def test_block_to_quote_node(self):
         markdown = "> Don't quote me"
-        html = markdown_to_html_node(markdown)
-        child_node = html.children[0]
-        print(html)
-        self.assertEqual(html.tag, "div")
-        self.assertEqual(child_node.tag, "blockquote")
-        self.assertEqual(child_node.props, None)
-        self.assertEqual(child_node.children[0].tag, "")
-        self.assertEqual(child_node.children[0].value, "Don't quote me")
-        self.assertEqual(child_node.children[0].props, None)
+        html_node = markdown_to_html_node(markdown)
+        html = html_node.to_html()
     
+    def test_block_to_code_node(self):
+        markdown = """## How to Python
+        
+```print('hello world')```
+
+BOOM. Done.
+"""
+        html_node = markdown_to_html_node(markdown)
+        html = html_node.to_html()
+        print(html)
     
     
 if __name__ == "__main__":
