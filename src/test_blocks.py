@@ -136,16 +136,27 @@ BOOM. Done.
         self.assertEqual(html, "<div><h2>How to Python</h2><pre><code>print('hello world')</code></pre><p>BOOM. Done.</p></div>")
         
     
-    def test_block_to_ordered_list(self):
+    def test_block_to_ul(self):
         markdown = """# Today's TODO List:
 
 * Get things done
 * Do more things
 * And more things"""
         html_node = markdown_to_html_node(markdown)
-        debug_print(f"html_node: \n\n{html_node}")
         html = html_node.to_html()
         self.assertEqual(html, "<div><h1>Today's TODO List:</h1><ul><li>Get things done</li><li>Do more things</li><li>And more things</li></ul></div>")
     
+    def test_block_to_ol(self):
+        markdown = """
+1. Wake up
+2. Code
+3. Sleep
+4. Repeat
+"""
+        node = markdown_to_html_node(markdown)
+        html = node.to_html()
+        self.assertEqual(html, "<div><ol><li>Wake up</li><li>Code</li><li>Sleep</li><li>Repeat</li></ol></div>")
+
+
 if __name__ == "__main__":
     AssertionHelper.main()
