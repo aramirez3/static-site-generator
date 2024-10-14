@@ -26,12 +26,12 @@ def copy_folder_contents(target_folder = "static", destination_folder = "public"
             copy(f"{target_folder}/{item}", f"{destination_folder}/{item}")
             print(f"Copied {target_folder}/{item} to {destination_folder}/{item}")
 
-def generate_home_page():
+def generate_site():
     generate_page('content/index.md', 'template.html', 'static/index.html')
-
+    
 def main():
     reset_public_folder()
-    generate_home_page()
+    generate_site()
     copy_folder_contents()
 
 main()
