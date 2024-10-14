@@ -1,5 +1,5 @@
 from textnode import TextNode
-from template import generate_page
+from template import generate_pages_recursive
 
 from os import path, listdir, mkdir
 
@@ -27,7 +27,7 @@ def copy_folder_contents(target_folder = "static", destination_folder = "public"
             print(f"Copied {target_folder}/{item} to {destination_folder}/{item}")
 
 def generate_site():
-    generate_page('content/index.md', 'template.html', 'static/index.html')
+    generate_pages_recursive('content', 'template.html', 'static')
     
 def main():
     reset_public_folder()
