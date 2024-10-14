@@ -56,11 +56,13 @@ def markdown_to_html_node(markdown):
     for block in blocks:
         node = block_to_html_node(block)
         child_nodes.append(node)
-        print(f"child node in {block}::\n:::::{node}")
+        print(f"\nchild node in {block}::\n{node}\n")
     return ParentNode("div", child_nodes)
 
 def block_to_html_node(block):
     block_type = block_to_block_types(block)
+    print(f"blocktype: {block_type}")
+    print(f"block: {block}")
     if block_type == BlockTypes.PARAGRAPH.value:
         return paragraph_to_html_node(block)
     if block_type == BlockTypes.HEADING.value:
@@ -113,8 +115,17 @@ def code_to_html_node(block):
     return ParentNode("pre", [code])
 
 def ordered_list_to_html_node(block):
+    children = []
     lines = block.split("\n")
-    print(lines)
+    for i in range(1, len(lines) + 1):
+        children.append(lines[i].replace(f"{i}. ", ""))
+    list_items = ParentNode("li", children)
+    return ParentNode("ol", [list_items])
 
 def unordered_list_to_html_node(block):
-    return block
+    line_items = []
+    lines = block.split("\n")
+    for line in lines:
+        line_items.append(text_to_children(line[2:]))
+    children = ParentNode("li", line_items)
+    return ParentNode("ul", [children])

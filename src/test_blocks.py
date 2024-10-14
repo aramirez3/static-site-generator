@@ -133,7 +133,6 @@ BOOM. Done.
 """
         html_node = markdown_to_html_node(markdown)
         html = html_node.to_html()
-        debug_print(html)
         self.assertEqual(html, "<div><h2>How to Python</h2><pre><code>print('hello world')</code></pre><p>BOOM. Done.</p></div>")
         
     
@@ -144,8 +143,9 @@ BOOM. Done.
 * Do more things
 * And more things"""
         html_node = markdown_to_html_node(markdown)
+        debug_print(f"html_node: \n\n{html_node}")
         html = html_node.to_html()
-        self.assertEqual(html, "")
+        self.assertEqual(html, "<div><h1>Today's TODO List:</h1><ul><li>Get things done</li><li>Do more things</li><li>And more things</li></ul></div>")
     
 if __name__ == "__main__":
     AssertionHelper.main()
