@@ -19,8 +19,10 @@ class TestTextNode(AssertionHelper):
         self.assertEqual(actual, expected)
         
     def test_markdown_to_blocks_code(self):
-        actual = markdown_to_blocks("```print('hello world')```")
-        expected = ["```print('hello world')```"]
+        actual = markdown_to_blocks("""```
+print('hello world')
+```""")
+        expected = ["```\nprint('hello world')\n```"]
         self.assertEqual(actual, expected)
         
     def test_markdown_to_blocks_empty(self):
@@ -118,18 +120,32 @@ Ask gippity to google for you."""
         markdown = "> Don't quote me"
         html_node = markdown_to_html_node(markdown)
         html = html_node.to_html()
+        self.assertEqual(html, "<div><blockquote>Don't quote me</blockquote></div>")
     
     def test_block_to_code_node(self):
         markdown = """## How to Python
-        
-```print('hello world')```
+
+```
+print('hello world')
+```
 
 BOOM. Done.
 """
         html_node = markdown_to_html_node(markdown)
         html = html_node.to_html()
-        print(html)
+        debug_print(html)
+        self.assertEqual(html, "<div><h2>How to Python</h2><pre><code>print('hello world')</code></pre><p>BOOM. Done.</p></div>")
+        
     
+    def test_block_to_ordered_list(self):
+        markdown = """# Today's TODO List:
+
+* Get things done
+* Do more things
+* And more things"""
+        html_node = markdown_to_html_node(markdown)
+        html = html_node.to_html()
+        self.assertEqual(html, "")
     
 if __name__ == "__main__":
     AssertionHelper.main()

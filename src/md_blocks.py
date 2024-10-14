@@ -56,6 +56,7 @@ def markdown_to_html_node(markdown):
     for block in blocks:
         node = block_to_html_node(block)
         child_nodes.append(node)
+        print(f"child node in {block}::\n:::::{node}")
     return ParentNode("div", child_nodes)
 
 def block_to_html_node(block):
@@ -107,12 +108,13 @@ def quote_to_html_node(block):
 def code_to_html_node(block):
     if not block.startswith("```") and not block.endswith("```"):
         raise ValueError("Invalid code block")
-    children = text_to_children(block[4:-3])
+    children = text_to_children(block[4:-4])
     code = ParentNode("code", children)
     return ParentNode("pre", [code])
 
 def ordered_list_to_html_node(block):
-    return block
+    lines = block.split("\n")
+    print(lines)
 
 def unordered_list_to_html_node(block):
     return block
