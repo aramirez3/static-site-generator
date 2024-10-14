@@ -1,7 +1,6 @@
 from md_blocks import markdown_to_html_node
 
 import os
-import shutil
 
 def extract_title(markdown):
     lines = markdown.split("\n")
@@ -34,6 +33,9 @@ def generate_page(from_path, template_path, dest_path):
     if not os.path.exists(dest_folder):
         os.mkdir(dest_folder)
     
+    if os.path.exists(dest_path):
+        os.remove(dest_path)
+        
     with open(dest_path, "x") as f:
         f.write(template_with_content)
 
