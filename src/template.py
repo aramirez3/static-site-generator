@@ -45,25 +45,24 @@ def insert_text_at_template(text, template_html, location):
     return f"{updated_template[0].strip()}{text}{updated_template[1].strip()}"
 
 def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
-    print(f"dir_path_content, template_path, dest_dir_path: {dir_path_content}, {template_path}, {dest_dir_path}")
     print(f"Generating pages for '{dir_path_content}'")
     
     content = os.listdir(dir_path_content)
     
     if not os.path.exists(dest_dir_path):
         os.mkdir(dest_dir_path)
+        print(f"Created folder at dest '{dest_dir_path}'")
     
     for item in content:
-        if os.path.isfile(item):
-            file = os.path.basename(item)
+        qualified_content_dir = os.path.join("", dir_path_content, item)
+        qualified_dest_dir = os.path.join("", dest_dir_path, item)
+        if os.path.isfile(qualified_content_dir):
+            file = os.path.basename(qualified_content_dir)
             if file.endswith(".md"):
-                dest_file = os.path.join("/", dest_dir_path, item)
-                print(f'dest_file: {dest_file}')
-                generate_page(item, template_path, dest_file)
+                new_file = qualified_dest_dir.replace(".md", ".html")
+                generate_page(qualified_content_dir, template_path, new_file)
+                print(f"Created file '{new_file}'")
         else:
-            if not os.path.exists(item):
-                current_path = os.path.join("", dir_path_content, item)
-                dest_path = os.path.join("", dest_dir_path, item)
-                print(f'dest_path: {dest_path}')
-                generate_pages_recursive(current_path, template_path, dest_path)
+            if not os.path.exists(qualified_dest_dir):
+                generate_pages_recursive(qualified_content_dir, template_path, qualified_dest_dir)
     
